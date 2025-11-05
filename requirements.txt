@@ -1,0 +1,6 @@
+requests
+Flask
+pytest
+pytest-cov
+bcrypt # For WTH-SR-002: Password Hashing
+PyJWT # For WTH-SR-003: Token Auth

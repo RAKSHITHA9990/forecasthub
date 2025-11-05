@@ -1,0 +1,12 @@
+# Dependency folders
+*.pyc
+__pycache__/
+venv/
+.venv/
+# Environment variables
+.env
+# Build artifacts and reports
+/dist
+/build
+/htmlcov
+coverage.xml

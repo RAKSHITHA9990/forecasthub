@@ -1,0 +1,52 @@
+ name: CI/CD Pipeline - Sprint 1 & 2
+
+on:
+  push:
+    branches:
+      - main
+      - feature/** # Runs on every push to your feature branch
+  pull_request:
+    branches:
+      - main # Runs on every Pull Request merge attempt into main
+
+jobs:
+  build-and-quality-check:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout Code
+      uses: actions/checkout@v4
+
+    # 1. BUILD Stage: Setup Python and Install Dependencies
+    - name: Set up Python
+      uses: actions/setup-python@v5
+      with:
+        python-version: '3.10' # Ensure this matches your local Python version
+    - name: Install Dependencies
+      run: |
+        python -m pip install --upgrade pip
+        # Installs all packages listed in your requirements.txt
+        pip install -r requirements.txt 
+        
+    # 2. TEST & 3. COVERAGE Stage: Run Tests and Generate Report
+    - name: Run Tests and Collect Coverage (Code Coverage ≥75% Required)
+      run: |
+        # Pytest runs tests, pytest-cov collects coverage data
+        pytest --cov=./src --cov-report=xml 
+    
+    # 4. LINT Stage: Check Code Style and Quality
+    - name: Run Lint Check (Flake8)
+      run: |
+        # Flake8 is Python's standard style guide checker (part of your required tools)
+        flake8 . --exclude .github --max-line-length=120
+        
+    # 5. SECURITY Stage: Check for Vulnerabilities
+    - name: Run Security Scan (Bandit)
+      run: |
+        # Bandit is a security linter for Python projects
+        bandit -r src -ll -x tests # Scan only the source code for low-level issues
+        
+    - name: Upload Coverage Report Artifact (For later use/reporting)
+      uses: actions/upload-artifact@v4
+      with:
+        name: coverage-report-sprint1
+        path: coverage.xml

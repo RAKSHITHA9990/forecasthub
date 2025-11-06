@@ -1,9 +1,11 @@
 import bcrypt # For WTH-SR-002 (hashing)
 import jwt    # For WTH-SR-003 (token generation)
+import os     # <--- NEW: Imported for secure environment variable loading
 from datetime import datetime, timedelta
 
-# Note: In a real project, SECRET_KEY should be loaded from a .env file (which you ignored in .gitignore)
-SECRET_KEY = "DEV_SECRET_KEY" 
+# Fix for Bandit/Security Scan: Loads from the environment variable JWT_SECRET_KEY.
+# The default is only used if the environment variable is not set (e.g., during testing).
+SECRET_KEY = os.getenv("JWT_SECRET_KEY", "A_FALLBACK_SECRET_KEY_FOR_TESTS") 
 
 # WTH-SR-002 Implementation
 def hash_password(password: str) -> str:

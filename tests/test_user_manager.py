@@ -19,7 +19,7 @@ def test_password_verification_failure():
     wrong_password = "wrong"
     hashed = hash_password(correct_password)
     
-    # Verification must fail with the wrong password
+    # Verification must fail with the wrong password (covers the 'False' return path)
     assert not check_password(wrong_password, hashed)
 
 def test_token_generation_and_structure():
